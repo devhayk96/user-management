@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\Auth\LoginController;
 use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
+use App\Http\Controllers\Api\Auth\VerificationController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -18,19 +19,21 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('guest')->group(function () {
-    Route::post('login', [LoginController::class, 'login']);
-    Route::post('register', RegisterController::class);
+Route::middleware('guest')->group(function ($route) {
+    $route->post('login', [LoginController::class, 'login']);
+    $route->post('register', RegisterController::class);
 
-    Route::prefix('password')->group(function () {
-        Route::post('forgot', ForgotPasswordController::class);
-        Route::post('reset', ResetPasswordController::class)->name('password.reset');
+    $route->prefix('password')->group(function () use ($route) {
+        $route->post('forgot', ForgotPasswordController::class);
+        $route->post('reset', ResetPasswordController::class)->name('password.reset');
     });
-
 });
 
-Route::middleware('auth:sanctum')->group(function () {
-    Route::post('logout', [LoginController::class, 'logout']);
+Route::middleware('auth:sanctum')->group(function ($route) {
+    $route->post('logout', [LoginController::class, 'logout']);
 
-    Route::get('user', [UserController::class, 'getProfile']);
+    $route->get('user', [UserController::class, 'getProfile']);
+
+    $route->post('email/verification-resend', [VerificationController::class, 'resendNotification'])
+        ->name('verification.send');
 });

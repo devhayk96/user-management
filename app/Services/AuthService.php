@@ -7,6 +7,7 @@ use App\Models\User;
 use Exception;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -138,4 +139,23 @@ class AuthService extends BaseService
         return $this->sendResponse('Password reset successfully');
     }
 
+    /**
+     * @param $userId
+     * @param $hash
+     * @return JsonResponse
+     */
+    public function verifyEmail($userId, $hash): JsonResponse
+    {
+        $user = User::find($userId);
+
+        abort_if(!$user, 403);
+        abort_if(!hash_equals($hash, sha1($user->getEmailForVerification())), 403);
+
+        if (!$user->hasVerifiedEmail()) {
+            $user->markEmailAsVerified();
+            event(new Verified($user));
+        }
+
+        return $this->sendResponse('Your email has been successfully verified.');
+    }
 }

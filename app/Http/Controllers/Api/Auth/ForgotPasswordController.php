@@ -13,6 +13,7 @@ class ForgotPasswordController extends Controller
     /**
      * @OA\Post(
      *     path="/api/password/forgot",
+     *     tags={"Authentication"},
      *     summary="Send password reset link",
      *     @OA\Parameter(
      *         name="email",

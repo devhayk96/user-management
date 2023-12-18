@@ -27,6 +27,7 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *     path="/api/login",
+     *     tags={"Authentication"},
      *     summary="Authenticate user and generate JWT token",
      *     @OA\Parameter(
      *         name="email",
@@ -62,11 +63,11 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *     path="/api/logout",
+     *     tags={"Authentication"},
      *     summary="Sign out user and delete JWT token",
-     *     @OA\Response(response="200", description="You are logged out.", @OA\JsonContent()),
-     *     security={{"bearerAuth":{}}}
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(response="200", description="You are logged out.", @OA\JsonContent())
      * )
-     * @return JsonResponse
      */
     public function logout(): JsonResponse
     {

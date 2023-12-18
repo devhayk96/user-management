@@ -7,6 +7,9 @@
     "paths": {
         "/api/password/forgot": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Send password reset link",
                 "operationId": "e390061f0ab14b6ec96d01452d3ad239",
                 "parameters": [
@@ -50,6 +53,9 @@
         },
         "/api/login": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Authenticate user and generate JWT token",
                 "operationId": "5f90fad45b3bec06f69a5d179ce78a5f",
                 "parameters": [
@@ -112,6 +118,9 @@
         },
         "/api/logout": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Sign out user and delete JWT token",
                 "operationId": "30b14d0552474a26ab0603d4b9691900",
                 "responses": {
@@ -133,6 +142,9 @@
         },
         "/api/register": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Register a new user",
                 "operationId": "4e188e11de3f10ac8c5a04bdb81e32b8",
                 "parameters": [
@@ -215,6 +227,9 @@
         },
         "/api/password/reset": {
             "post": {
+                "tags": [
+                    "Authentication"
+                ],
                 "summary": "Send password reset link",
                 "operationId": "aa401962a98948321571337bd2cca358",
                 "parameters": [
@@ -275,6 +290,95 @@
                         }
                     }
                 }
+            }
+        },
+        "/email/verify/{id}/{hash}": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Verify user email",
+                "description": "Verify a user's email address using the provided ID and hash.",
+                "operationId": "f7e13ed8ba425e26c28d656e22636198",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "User ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "path",
+                        "description": "Verification hash",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/email/verification-resend": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Resend email verification",
+                "description": "Resend the email verification notification to the user.",
+                "operationId": "84ddbd981bc6002ea0b85732836559d0",
+                "responses": {
+                    "200": {
+                        "description": "Verification email resent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - user not authenticated",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "429": {
+                        "description": "Too Many Requests - Throttled",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
             }
         },
         "/api/user": {
