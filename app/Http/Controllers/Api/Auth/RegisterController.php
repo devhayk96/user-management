@@ -14,6 +14,7 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register",
+     *     tags={"Authentication"},
      *     summary="Register a new user",
      *     @OA\Parameter(
      *         name="firstName",
@@ -49,6 +50,13 @@ class RegisterController extends Controller
      *         description="User's confirm password",
      *         required=true,
      *         @OA\Schema(type="string", format = "password")
+     *     ),
+     *     @OA\Parameter(
+     *         name="deviceName",
+     *         in="query",
+     *         description="User's device name",
+     *         required=false,
+     *         @OA\Schema(type="string")
      *     ),
      *     @OA\Response(response="201", description="User registered successfully", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Validation errors", @OA\JsonContent())
