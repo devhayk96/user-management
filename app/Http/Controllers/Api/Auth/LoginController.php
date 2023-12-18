@@ -27,7 +27,7 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *     path="/api/login",
-     *     tags={"Authentication"},
+     *     tags={"Auth"},
      *     summary="Authenticate user and generate JWT token",
      *     @OA\Parameter(
      *         name="email",
@@ -56,7 +56,7 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *     path="/api/logout",
-     *     tags={"Authentication"},
+     *     tags={"Auth"},
      *     summary="Sign out user and delete JWT token",
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(response="200", description="You are logged out.", @OA\JsonContent())
@@ -70,7 +70,7 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *      path="/api/oauth/refresh-token",
-     *      tags={"Authentication"},
+     *      tags={"Auth"},
      *      summary="Refresh Access Token",
      *      description="Refresh the user's access token.",
      *      security={{"bearerAuth":{}}},

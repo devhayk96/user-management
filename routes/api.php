@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Auth\RegisterController;
 use App\Http\Controllers\Api\Auth\ResetPasswordController;
 use App\Http\Controllers\Api\Auth\VerificationController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -25,6 +26,8 @@ Route::middleware('guest')->group(function ($route) {
 
     $route->prefix('password')->group(function () use ($route) {
         $route->post('forgot', ForgotPasswordController::class);
+        // testing endpoint for allowing user to get parameter values and use for API call
+        $route->get('reset', [Controller::class, 'displayParameters'])->name('password.reset');
         $route->post('reset', ResetPasswordController::class)->name('password.reset');
     });
 });
@@ -34,8 +37,17 @@ Route::middleware('auth:sanctum')->group(function ($route) {
 
     $route->get('user', [UserController::class, 'getProfile']);
 
-    $route->post('email/verification-resend', [VerificationController::class, 'resendNotification'])
-        ->name('verification.send');
+    $route->prefix('email')->group(function () use ($route) {
+        $route->post('verification-resend', [VerificationController::class, 'resendNotification'])
+            ->name('verification.send');
+
+        $route->post('change', [VerificationController::class, 'changeEmail']);
+        $route->post('verify-new', [VerificationController::class, 'verifyNewEmail']);
+    });
 
     $route->post('oauth/refresh-token', [LoginController::class, 'refreshToken']);
 });
+
+Route::post('email/verify', [VerificationController::class, 'verify'])
+    ->name('verification.verify');
+

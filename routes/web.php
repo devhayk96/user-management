@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\Auth\VerificationController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +19,7 @@ Route::get('/', function () {
     return redirect('api/documentation');
 });
 
-
-Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])
-    ->middleware(['signed', 'throttle:6,1'])
+// testing endpoint for allowing user to take parameter values and use for API call
+Route::get('email/verify/{id}/{hash}', [Controller::class, 'displayVerifySegments'])
+    ->middleware(['throttle:6,1'])
     ->name('verification.verify');

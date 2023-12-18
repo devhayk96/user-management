@@ -12,7 +12,7 @@ class ResetPasswordController extends Controller
     /**
      * @OA\Post(
      *     path="/api/password/reset",
-     *     tags={"Authentication"},
+     *     tags={"Auth"},
      *     summary="Reset password",
      *     @OA\Parameter(
      *         name="token",

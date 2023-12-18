@@ -14,7 +14,7 @@ class RegisterController extends Controller
     /**
      * @OA\Post(
      *     path="/api/register",
-     *     tags={"Authentication"},
+     *     tags={"Auth"},
      *     summary="Register a new user",
      *     @OA\Parameter(
      *         name="firstName",
@@ -52,7 +52,8 @@ class RegisterController extends Controller
      *         @OA\Schema(type="string", format = "password")
      *     ),
      *     @OA\Response(response="201", description="User registered successfully", @OA\JsonContent()),
-     *     @OA\Response(response="422", description="Validation errors", @OA\JsonContent())
+     *     @OA\Response(response="422", description="Validation errors", @OA\JsonContent()),
+     *     @OA\Response(response="400", description="Something went wrong", @OA\JsonContent())
      * )
      */
     public function __invoke(RegisterRequest $request, AuthService $authService): JsonResponse

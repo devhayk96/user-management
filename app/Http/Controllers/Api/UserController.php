@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Response;
@@ -19,11 +20,12 @@ class UserController extends Controller
      *     path="/api/user",
      *     summary="Get logged-in user details",
      *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
-     *     security={{"bearerAuth":{}}}
+     *     security={{"bearerAuth":{}}},
+     *     tags={"User"}
      * )
      */
     public function getProfile(Request $request): JsonResponse
     {
-        return Response::json(['user' => $request->user()]);
+        return Response::json(['user' => new UserResource($request->user())]);
     }
 }
