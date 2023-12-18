@@ -27,7 +27,7 @@ class RegistrationTest extends TestCase
 
         $response->assertSuccessful();
 
-        $user = User::where('email', 'druc@pinsmile.com')->first();
+        $user = User::where('email', 'devhay1996@gmail.com')->first();
         Notification::assertSentTo($user, VerifyEmail::class);
 
         $this->assertNotEmpty($response->getContent());
