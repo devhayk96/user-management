@@ -22,7 +22,6 @@ class RegistrationTest extends TestCase
             'email'      => 'devhay1996@gmail.com',
             'password'   => '123456789',
             'password_confirmation' => '123456789',
-            'device_name' => 'iphone'
         ]);
 
         $response->assertSuccessful();

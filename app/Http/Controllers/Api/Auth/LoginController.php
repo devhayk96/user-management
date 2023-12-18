@@ -27,7 +27,7 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *     path="/api/login",
-     *     tags={"Authentication"},
+     *     tags={"Auth"},
      *     summary="Authenticate user and generate JWT token",
      *     @OA\Parameter(
      *         name="email",
@@ -43,13 +43,6 @@ class LoginController extends Controller
      *         required=true,
      *         @OA\Schema(type="string", format = "password")
      *     ),
-     *     @OA\Parameter(
-     *         name="deviceName",
-     *         in="query",
-     *         description="User's device name",
-     *         required=false,
-     *         @OA\Schema(type="string")
-     *     ),
      *     @OA\Response(response="200", description="Login successful", @OA\JsonContent()),
      *     @OA\Response(response="401", description="Invalid credentials", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Validation errors", @OA\JsonContent())
@@ -63,7 +56,7 @@ class LoginController extends Controller
     /**
      * @OA\Post(
      *     path="/api/logout",
-     *     tags={"Authentication"},
+     *     tags={"Auth"},
      *     summary="Sign out user and delete JWT token",
      *     security={{"bearerAuth":{}}},
      *     @OA\Response(response="200", description="You are logged out.", @OA\JsonContent())
@@ -73,4 +66,22 @@ class LoginController extends Controller
     {
         return $this->authService->logout();
     }
+
+    /**
+     * @OA\Post(
+     *      path="/api/oauth/refresh-token",
+     *      tags={"Auth"},
+     *      summary="Refresh Access Token",
+     *      description="Refresh the user's access token.",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\Response(response=200, description="Token refreshed successfully", @OA\JsonContent()),
+     *      @OA\Response(response=401, description="Unauthorized - Invalid or expired refresh token"),
+     * )
+     * @throws \Exception
+     */
+    public function refreshToken(): JsonResponse
+    {
+        return $this->authService->refreshAccessToken();
+    }
+
 }

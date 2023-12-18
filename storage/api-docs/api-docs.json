@@ -8,7 +8,7 @@
         "/api/password/forgot": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
                 "summary": "Send password reset link",
                 "operationId": "e390061f0ab14b6ec96d01452d3ad239",
@@ -54,7 +54,7 @@
         "/api/login": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
                 "summary": "Authenticate user and generate JWT token",
                 "operationId": "5f90fad45b3bec06f69a5d179ce78a5f",
@@ -76,15 +76,6 @@
                         "schema": {
                             "type": "string",
                             "format": "password"
-                        }
-                    },
-                    {
-                        "name": "deviceName",
-                        "in": "query",
-                        "description": "User's device name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
                         }
                     }
                 ],
@@ -119,7 +110,7 @@
         "/api/logout": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
                 "summary": "Sign out user and delete JWT token",
                 "operationId": "30b14d0552474a26ab0603d4b9691900",
@@ -140,10 +131,38 @@
                 ]
             }
         },
+        "/api/oauth/refresh-token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh Access Token",
+                "description": "Refresh the user's access token.",
+                "operationId": "49d19f3cf651eeb4103b2ceb90d81431",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or expired refresh token"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/register": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
                 "summary": "Register a new user",
                 "operationId": "4e188e11de3f10ac8c5a04bdb81e32b8",
@@ -194,15 +213,6 @@
                             "type": "string",
                             "format": "password"
                         }
-                    },
-                    {
-                        "name": "deviceName",
-                        "in": "query",
-                        "description": "User's device name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -221,6 +231,14 @@
                                 "schema": {}
                             }
                         }
+                    },
+                    "400": {
+                        "description": "Something went wrong",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
                     }
                 }
             }
@@ -228,9 +246,9 @@
         "/api/password/reset": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Auth"
                 ],
-                "summary": "Send password reset link",
+                "summary": "Reset password",
                 "operationId": "aa401962a98948321571337bd2cca358",
                 "parameters": [
                     {
@@ -292,19 +310,19 @@
                 }
             }
         },
-        "/email/verify/{id}/{hash}": {
-            "get": {
+        "/api/email/verify": {
+            "post": {
                 "tags": [
-                    "Authentication"
+                    "Email"
                 ],
                 "summary": "Verify user email",
                 "description": "Verify a user's email address using the provided ID and hash.",
-                "operationId": "f7e13ed8ba425e26c28d656e22636198",
+                "operationId": "eb0ce069d7d6ed0183fa100da8258f06",
                 "parameters": [
                     {
-                        "name": "id",
-                        "in": "path",
-                        "description": "User ID",
+                        "name": "userId",
+                        "in": "query",
+                        "description": "User's ID",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -312,8 +330,8 @@
                     },
                     {
                         "name": "hash",
-                        "in": "path",
-                        "description": "Verification hash",
+                        "in": "query",
+                        "description": "Verification Hash",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -343,7 +361,7 @@
         "/api/email/verification-resend": {
             "post": {
                 "tags": [
-                    "Authentication"
+                    "Email"
                 ],
                 "summary": "Resend email verification",
                 "description": "Resend the email verification notification to the user.",
@@ -381,8 +399,156 @@
                 ]
             }
         },
+        "/api/email/change": {
+            "post": {
+                "tags": [
+                    "Email"
+                ],
+                "summary": "Change user email",
+                "operationId": "fcf3f8aac39f677b33237faddea42c9e",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "description": "User's email",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Verification email resent successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/email/verify-new": {
+            "post": {
+                "tags": [
+                    "Email"
+                ],
+                "summary": "Verify user's new email",
+                "description": "Verify the new email address for a user.",
+                "operationId": "b0960318f335267f7cb7e5313689c588",
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "query",
+                        "description": "User's ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "hash",
+                        "in": "query",
+                        "description": "Hash",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "code",
+                        "in": "query",
+                        "description": "Verification code",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Email changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "410": {
+                        "description": "Verification code has expired",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/user": {
             "get": {
+                "tags": [
+                    "User"
+                ],
                 "summary": "Get logged-in user details",
                 "operationId": "6086f7944ad16321989e3a0809f9e9a6",
                 "responses": {

@@ -24,7 +24,6 @@ class LoginTest extends TestCase
         $response = $this->post('/api/login', [
             'email' => $user->email,
             'password' => '123456789',
-            'deviceName' => 'iphone'
         ]);
 
         $response->assertSuccessful();
