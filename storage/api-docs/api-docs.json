@@ -71,6 +71,15 @@
                             "type": "string",
                             "format": "password"
                         }
+                    },
+                    {
+                        "name": "deviceName",
+                        "in": "query",
+                        "description": "User's device name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 ],
                 "responses": {
@@ -172,6 +181,15 @@
                         "schema": {
                             "type": "string",
                             "format": "password"
+                        }
+                    },
+                    {
+                        "name": "deviceName",
+                        "in": "query",
+                        "description": "User's device name",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
                         }
                     }
                 ],

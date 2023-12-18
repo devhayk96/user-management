@@ -42,6 +42,13 @@ class LoginController extends Controller
      *         required=true,
      *         @OA\Schema(type="string", format = "password")
      *     ),
+     *     @OA\Parameter(
+     *         name="deviceName",
+     *         in="query",
+     *         description="User's device name",
+     *         required=false,
+     *         @OA\Schema(type="string")
+     *     ),
      *     @OA\Response(response="200", description="Login successful", @OA\JsonContent()),
      *     @OA\Response(response="401", description="Invalid credentials", @OA\JsonContent()),
      *     @OA\Response(response="422", description="Validation errors", @OA\JsonContent())

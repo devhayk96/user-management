@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Models\User;
 use Exception;
 use Illuminate\Auth\Events\PasswordReset;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -28,9 +29,8 @@ class AuthService extends BaseService
     {
         if (Auth::attempt($data)) {
             $loggedInUser = Auth::user();
-            $result['user'] = $this->resource($loggedInUser);
             $result['token'] = $loggedInUser
-                ->createToken('UserLoginToken')
+                ->createToken($data['deviceName'] ?? 'UserLoginToken')
                 ->plainTextToken;
 
             return $this->sendResponse(
@@ -64,16 +64,25 @@ class AuthService extends BaseService
      */
     public function register($data): JsonResponse
     {
-        $user = User::query()->create([
+        $newUser = User::create([
             'first_name' => $data['firstName'],
             'last_name' => $data['lastName'],
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
+        event(new Registered($newUser));
+
+        $accessToken = $newUser
+            ->createToken($data['deviceName'] ?? 'UserLoginToken')
+            ->plainTextToken;
+
         return $this->sendResponse(
             message: 'You have successfully signed up.',
-            result: $this->resource($user),
+            result: [
+                'user' => $this->resource($newUser),
+                'token' => $accessToken,
+            ],
             code: 201
         );
     }
