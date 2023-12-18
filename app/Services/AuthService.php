@@ -29,10 +29,10 @@ class AuthService extends BaseService
     public function attemptLogin($data): JsonResponse
     {
         if (Auth::attempt($data)) {
-            $loggedInUser = Auth::user();
-            $result['token'] = $loggedInUser
-                ->createToken($data['deviceName'] ?? 'UserLoginToken')
-                ->plainTextToken;
+            auth()->user()->tokens()->delete();
+
+            $result['accessToken'] = $this->createAccessToken()->plainTextToken;
+            $result['refreshToken'] = $this->createRefreshToken()->plainTextToken;
 
             return $this->sendResponse(
                 message: 'You are successfully logged in',
@@ -41,7 +41,7 @@ class AuthService extends BaseService
         }
 
         return $this->sendError(
-            error: 'Unauthorised',
+            error: 'Unauthorized',
             errorMessages: ['Invalid email or password.'],
             code: 401
         );
@@ -74,15 +74,10 @@ class AuthService extends BaseService
 
         event(new Registered($newUser));
 
-        $accessToken = $newUser
-            ->createToken($data['deviceName'] ?? 'UserLoginToken')
-            ->plainTextToken;
-
         return $this->sendResponse(
             message: 'You have successfully signed up.',
             result: [
                 'user' => $this->resource($newUser),
-                'token' => $accessToken,
             ],
             code: 201
         );
@@ -158,4 +153,41 @@ class AuthService extends BaseService
 
         return $this->sendResponse('Your email has been successfully verified.');
     }
+
+    /**
+     * Refresh access token.
+     *
+     */
+    public function refreshAccessToken(): JsonResponse
+    {
+        $refreshAccessToken = $this->createAccessToken();
+
+        return $this->sendResponse(
+            "Token refreshed successfully",
+            ['token' => $refreshAccessToken->plainTextToken]
+        );
+    }
+
+    /**
+     * @return mixed
+     */
+    private function createAccessToken(): mixed
+    {
+        return Auth::user()->createToken(
+            name: 'access_token',
+            expiresAt: now()->addHours(config('sanctum.expiration'))
+        );
+    }
+
+    /**
+     * @return mixed
+     */
+    private function createRefreshToken(): mixed
+    {
+        return Auth::user()->createToken(
+            name: 'refresh_token',
+            expiresAt: now()->addHours(config('sanctum.rt_expiration'))
+        );
+    }
+
 }

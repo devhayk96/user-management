@@ -77,15 +77,6 @@
                             "type": "string",
                             "format": "password"
                         }
-                    },
-                    {
-                        "name": "deviceName",
-                        "in": "query",
-                        "description": "User's device name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -131,6 +122,34 @@
                                 "schema": {}
                             }
                         }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/oauth/refresh-token": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Refresh Access Token",
+                "description": "Refresh the user's access token.",
+                "operationId": "49d19f3cf651eeb4103b2ceb90d81431",
+                "responses": {
+                    "200": {
+                        "description": "Token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized - Invalid or expired refresh token"
                     }
                 },
                 "security": [
@@ -194,15 +213,6 @@
                             "type": "string",
                             "format": "password"
                         }
-                    },
-                    {
-                        "name": "deviceName",
-                        "in": "query",
-                        "description": "User's device name",
-                        "required": false,
-                        "schema": {
-                            "type": "string"
-                        }
                     }
                 ],
                 "responses": {
@@ -230,7 +240,7 @@
                 "tags": [
                     "Authentication"
                 ],
-                "summary": "Send password reset link",
+                "summary": "Reset password",
                 "operationId": "aa401962a98948321571337bd2cca358",
                 "parameters": [
                     {

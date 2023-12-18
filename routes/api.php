@@ -36,4 +36,6 @@ Route::middleware('auth:sanctum')->group(function ($route) {
 
     $route->post('email/verification-resend', [VerificationController::class, 'resendNotification'])
         ->name('verification.send');
+
+    $route->post('oauth/refresh-token', [LoginController::class, 'refreshToken']);
 });
