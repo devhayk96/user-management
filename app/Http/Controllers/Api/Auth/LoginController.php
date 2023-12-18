@@ -9,6 +9,15 @@ use Illuminate\Http\JsonResponse;
 
 class LoginController extends Controller
 {
+    /**
+     * @OA\SecurityScheme(
+     *     securityScheme="bearerAuth",
+     *     type="http",
+     *     scheme="bearer",
+     *     bearerFormat="JWT",
+     * )
+     */
+
     public function __construct(
         protected AuthService $authService
     ) {
@@ -31,10 +40,11 @@ class LoginController extends Controller
      *         in="query",
      *         description="User's password",
      *         required=true,
-     *         @OA\Schema(type="string")
+     *         @OA\Schema(type="string", format = "password")
      *     ),
-     *     @OA\Response(response="200", description="Login successful"),
-     *     @OA\Response(response="401", description="Invalid credentials")
+     *     @OA\Response(response="200", description="Login successful", @OA\JsonContent()),
+     *     @OA\Response(response="401", description="Invalid credentials", @OA\JsonContent()),
+     *     @OA\Response(response="422", description="Validation errors", @OA\JsonContent())
      * )
      */
     public function login(LoginRequest $request): JsonResponse
@@ -46,7 +56,8 @@ class LoginController extends Controller
      * @OA\Post(
      *     path="/api/logout",
      *     summary="Sign out user and delete JWT token",
-     *     @OA\Response(response="200", description="You are logged out.")
+     *     @OA\Response(response="200", description="You are logged out.", @OA\JsonContent()),
+     *     security={{"bearerAuth":{}}}
      * )
      * @return JsonResponse
      */

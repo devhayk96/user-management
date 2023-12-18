@@ -18,7 +18,7 @@ class UserController extends Controller
      * @OA\Get(
      *     path="/api/user",
      *     summary="Get logged-in user details",
-     *     @OA\Response(response="200", description="Success"),
+     *     @OA\Response(response="200", description="Success", @OA\JsonContent()),
      *     security={{"bearerAuth":{}}}
      * )
      */
